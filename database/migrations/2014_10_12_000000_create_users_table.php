@@ -17,9 +17,15 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->foreignId('mate_id')
+                ->unsigned()
+                ->nullable()
+                ->references('id')
+                ->on('users')
+                ->onDelete('SET NULL');
             $table->rememberToken();
+            $table->dateTime('last_seen')->nullable();
             $table->timestamps();
         });
     }

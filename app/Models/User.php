@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -21,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'last_seen',
     ];
 
     /**
@@ -33,12 +36,32 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
+    protected $dates = [
+        'last_seen',
     ];
+
+    public function mate(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class)->latest();
+    }
+
+    public function getLastMessage(bool $excludeToday = true)
+    {
+        $messages = $this->messages();
+
+        if ($excludeToday) {
+            return $messages->whereDate('created_at', '!=', Carbon::today())->first();
+        } else {
+            $todayMessage = $messages->whereDate('created_at', '=', date('Y-m-d'))->first();
+
+            return ($todayMessage->exists())
+                ? $todayMessage
+                : $messages->create();
+        }
+    }
 }
