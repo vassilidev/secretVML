@@ -59,7 +59,7 @@ class User extends Authenticatable
         } else {
             $todayMessage = $messages->whereDate('created_at', '=', date('Y-m-d'))->first();
 
-            return ($todayMessage->exists())
+            return (!is_null($todayMessage))
                 ? $todayMessage
                 : $messages->create();
         }
