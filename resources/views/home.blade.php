@@ -24,7 +24,8 @@
         <hr>
         Last co : {{ Auth::user()->mate->updated_at->diffForHumans() ?? '' }} <br>
         Last Msg : {{ Auth::user()->mate->getLastMessage(false)->updated_at->diffForHumans() ?? ''}} <br>
-        nbr mots : {{ Str::wordCount(strip_tags(str_replace('&nbsp;', '', Auth::user()->mate->getLastMessage(false)->message))) }}
+        nbr mots
+        : {{ Str::wordCount(strip_tags(str_replace('&nbsp;', '', Auth::user()->mate->getLastMessage(false)->message))) }}
         <hr>
         <div class="my-4 row justify-content-center">
             <div class="col-lg-6">
@@ -55,7 +56,9 @@
     <script>
         tinymce.init({
             selector: '#message',
-            plugins: 'advlist autolink lists link image charmap hr anchor pagebreak',
+            plugins: "link image code",
+            toolbar: 'undo redo | styleselect | forecolor | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image | code',
+            menubar: false,
             toolbar_mode: 'floating',
         });
     </script>
