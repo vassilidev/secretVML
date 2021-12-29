@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
 
 class HomeController extends Controller
 {
@@ -20,9 +20,9 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return View
      */
-    public function index(): \Illuminate\Contracts\Support\Renderable
+    public function index(): View
     {
         $messages = [
             'today' => Auth::user()->getLastMessage(false),
@@ -32,6 +32,6 @@ class HomeController extends Controller
             ]
         ];
 
-        return view('home', compact('messages'));
+        return view('pages.homepage', compact('messages'));
     }
 }
